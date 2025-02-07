@@ -1,0 +1,99 @@
+-------------------------------------------------------------------------------
+-- Ryan Salmon
+-- Lab 4 Test Bench
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity add_sub_tb is
+end add_sub_tb;
+
+architecture arch of add_sub_tb is
+
+component add_sub is
+    port(
+      a      : in std_logic_vector (2 downto 0); --Number 1 
+      b      : in std_logic_vector (2 downto 0); --Number 2
+      add    : in std_logic;
+      sub    : in std_logic;
+      clk    : in std_logic;
+      reset  : in std_logic;
+      hex_4 : out std_logic_vector (6 downto 0); --Number 1 (a)
+      hex_2 : out std_logic_vector (6 downto 0); --Number 2 (b)
+      hex_0 : out std_logic_vector (6 downto 0) --Result Number
+    );
+end component;
+
+constant NUM_BITS   : integer := 3;
+
+signal a      :  std_logic_vector (2 downto 0);  
+signal b      :  std_logic_vector (2 downto 0); 
+signal add    :  std_logic;
+signal sub    :  std_logic;
+signal hex_4  :  std_logic_vector (6 downto 0); 
+signal hex_2  :  std_logic_vector (6 downto 0); 
+signal hex_0  :  std_logic_vector (6 downto 0); 
+constant period     : time := 20ns;         
+signal clk          : std_logic := '0';
+signal reset        : std_logic := '1';
+
+begin
+
+-- clock process
+clock: process
+  begin
+    clk <= not clk;
+    wait for period/2;
+end process; 
+ 
+-- reset process
+async_reset: process
+  begin
+    wait for 2 * period;
+    reset <= '0';
+    wait;
+end process; 
+
+uut:top  
+  port map(
+    clk   => clk,
+    reset => reset,
+    a     => a,
+    b     => b,
+    add   => add,
+    sub   => sub,
+    hex_4 => hex_4,
+    hex_2 => hex_2,
+    hex_0 => hex_0  
+  );
+  
+sequential_tb : process 
+  begin
+    report "****************** sequential testbench start ****************";
+    wait for 100 ns;   -- let all the initial conditions trickle through
+    add <= '1';
+    for i in 0 to ((2 ** NUM_BITS) - 1) loop
+      a <= std_logic_vector(unsigned(a) + 1 );
+      for j in 0 to ((2 ** NUM_BITS) - 1)  loop
+        b <= std_logic_vector(unsigned(b) + 1 );  
+        wait for 20 ns;
+      end loop;
+    end loop;
+    add <= '0';
+    report "****************** add test complete testbench stop ****************";
+    
+    sub <= '1';
+    for i in 0 to ((2 ** NUM_BITS) - 1) loop
+      a <= std_logic_vector(unsigned(a) + 1 );
+      for j in 0 to ((2 ** NUM_BITS) - 1)  loop
+        b <= std_logic_vector(unsigned(b) + 1 );  
+        wait for 20 ns;
+      end loop;
+    end loop;
+    sub <= '0';
+    report "****************** sub   test complete testbench stop ****************";
+    
+    wait;
+end process; 
+
+end arch;

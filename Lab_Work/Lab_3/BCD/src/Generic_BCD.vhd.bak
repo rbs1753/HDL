@@ -1,0 +1,53 @@
+Library ieee;
+USE ieee.std_logic_1164.all;
+Use ieee.numeric_std.all;
+
+Entity SSD is
+    Port(
+          bcd         :in std_logic_vector(3 downto 0);
+          clk            :in std_logic;
+          reset          :in std_logic;
+          Hex :out std_logic_vector(6 downto 0));
+End SSD;
+
+Architecture model of SSD is
+
+    Constant zero : std_logic_vector(6 downto 0) := "1000000";
+    Constant one : std_logic_vector(6 downto 0) := "1111001";
+    Constant two : std_logic_vector(6 downto 0) := "0100100";
+    Constant three : std_logic_vector(6 downto 0) := "0110000";
+    Constant four : std_logic_vector(6 downto 0) := "0011001";
+    Constant five : std_logic_vector(6 downto 0) := "0010010";
+    Constant six : std_logic_vector(6 downto 0) := "0000010";
+    Constant seven : std_logic_vector(6 downto 0) := "1111000";
+    Constant eight : std_logic_vector(6 downto 0) := "0000000";
+    Constant nine : std_logic_vector(6 downto 0) := "0011000";
+    Constant blank : std_logic_vector(6 downto 0) := "1111111";
+    Constant dash : std_logic_vector(6 downto 0) := "0111111";
+    
+Begin 
+    
+    case_proc : Process(bcd, clk, reset) is
+    Begin
+         if(reset = '0') then
+             Hex <= blank;
+         elsif (clk'event and clk = '1') then
+             Case Hundreds_Place is    
+                when "0000" => Hex <= zero;
+                when "0001" => Hex <= one;
+                when "0010" => Hex <= two;
+                when "0011" => Hex <= three;
+                when "0100" => Hex <= four;
+                when "0101" => Hex <= five;
+                when "0110" => Hex <= six;
+                when "0111" => Hex <= seven;
+                when "1000" => Hex <= eight;
+                when "1001" => Hex <= nine;
+                when others => Hex <= blank;
+            End Case;
+        End if;
+    End Process;
+    
+    
+End model;
+    

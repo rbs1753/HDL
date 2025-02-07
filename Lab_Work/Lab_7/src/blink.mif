@@ -1,0 +1,23 @@
+WIDTH = 13;
+DEPTH = 32; % WIDTH is the number of bits of data per word %
+% DEPTH and WIDTH should be entered as decimal numbers %
+ADDRESS_RADIX = DEC; % Address and value radixes are required %
+DATA_RADIX    = BIN; % Enter BIN, DEC, HEX, OCT, or UNS; unless %
+ % otherwise specified, radixes = HEX %
+-- Specify values for addresses, which can be single address or range
+CONTENT
+BEGIN
+0   : 0000000000100; %The order is as follows ex, op(2), mr, ms, input(8): No.1 Set addition of 4 %  
+1   : 1000000000100; %execute 0 + 4 %
+2   : 0100000001000; %Set up 4 * 8 %
+3   : 1100000001000; %Execute 4 * 8 %
+4   : 0000100000000; %MS 32 to save register %
+5   : 0010000001000; %Set up 32 - 8 %
+6   : 1010000001000; %Execute 32 - 8 %
+7   : 0110000000010; %Set up 24 / 2 %
+8   : 1110000000010; %Execute 24 / 2 %
+9   : 0001000000000; %Hit MR to return 32 %
+10  : 0110000000010; %Set up 32 / 2 %
+11  : 1110000000010; %Execute 32 / 2 %
+[12..31] : 0000000000000;
+END;
